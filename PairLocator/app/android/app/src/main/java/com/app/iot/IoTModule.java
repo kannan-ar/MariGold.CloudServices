@@ -53,28 +53,24 @@ public class IoTModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void pingIoT(double lat, double lng, Callback cb) throws IOException, URISyntaxException, InterruptedException {
-        //DeviceClient client = new DeviceClient(connString, protocol);
-        //client.open();
-/*
-        TelemetryDataPoint telemetryDataPoint = new TelemetryDataPoint();
-        telemetryDataPoint.lat = lat;
-        telemetryDataPoint.lng = lng;
-
-          // Add the telemetry to the message body as JSON.
-        String msgStr = telemetryDataPoint.serialize();
-        Message msg = new Message(msgStr);
-
-        Object lockobj = new Object();
-
-        EventCallback callback = new EventCallback();
-        client.sendEventAsync(msg, callback, lockobj);
-
-        synchronized (lockobj) {
-            lockobj.wait();
-        }
-*/
         try{
             DeviceClient client = new DeviceClient(connString, protocol);
+            client.open();
+            TelemetryDataPoint telemetryDataPoint = new TelemetryDataPoint();
+            telemetryDataPoint.lat = lat;
+            telemetryDataPoint.lng = lng;
+
+            String msgStr = telemetryDataPoint.serialize();
+            Message msg = new Message(msgStr);
+
+            Object lockobj = new Object();
+
+            EventCallback callback = new EventCallback();
+            client.sendEventAsync(msg, callback, lockobj);
+
+            synchronized (lockobj) {
+                lockobj.wait();
+            }
             cb.invoke(null, "test hello");
         }catch (Exception e){
             cb.invoke(e.toString(), null);

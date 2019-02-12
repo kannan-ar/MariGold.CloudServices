@@ -18,7 +18,7 @@ export default class App extends Component {
 
   componentDidMount() {
     NativeModules.IoT.pingIoT(10.0058822, 76.3066627, (err, name) => {
-      this.setState({message: err});
+      this.setState({message: name});
     });
     
   }
