@@ -6,9 +6,11 @@ import com.microsoft.azure.sdk.iot.provisioning.device.*;
 import com.microsoft.azure.sdk.iot.provisioning.device.internal.exceptions.ProvisioningDeviceClientException;
 import com.microsoft.azure.sdk.iot.provisioning.security.hsm.SecurityProviderX509Cert;
 import com.microsoft.azure.sdk.iot.provisioning.security.exceptions.SecurityProviderException;
+import com.microsoft.azure.sdk.iot.provisioning.security.SecurityProvider;
 
 import java.io.IOException;
-import java.util.Scanner;
+import java.util.Collection;
+import java.util.LinkedList;
 
 //How to generate self-signed certificate: https://docs.microsoft.com/en-us/azure/iot-dps/quick-create-simulated-device-x509-java
 public class ProvisioningService 
@@ -72,7 +74,7 @@ public class ProvisioningService
         }
     }
 
-    public void startProvisioning()
+    public void startProvisioning() throws Exception
     {
         ProvisioningDeviceClient provisioningDeviceClient = null;
         DeviceClient deviceClient = null;
@@ -83,7 +85,7 @@ public class ProvisioningService
             SecurityProvider securityProviderX509 = new SecurityProviderX509Cert(leafPublicPem, leafPrivateKey, signerCertificates);
             provisioningDeviceClient = ProvisioningDeviceClient.create(globalEndpoint, idScope, PROVISIONING_DEVICE_CLIENT_TRANSPORT_PROTOCOL,
                                                                        securityProviderX509);
-
+            /*
             provisioningDeviceClient.registerDevice(new ProvisioningDeviceClientRegistrationCallbackImpl(), provisioningStatus);
 
             while (provisioningStatus.provisioningDeviceClientRegistrationInfoClient.getProvisioningDeviceClientStatus() != ProvisioningDeviceClientStatus.PROVISIONING_DEVICE_STATUS_ASSIGNED)
@@ -103,25 +105,25 @@ public class ProvisioningService
             {
                 String iotHubUri = provisioningStatus.provisioningDeviceClientRegistrationInfoClient.getIothubUri();
                 String deviceId = provisioningStatus.provisioningDeviceClientRegistrationInfoClient.getDeviceId();
-            }
-
-            try
-            {
-                deviceClient = DeviceClient.createFromSecurityProvider(iotHubUri, deviceId, securityProviderX509, IotHubClientProtocol.MQTT);
-                deviceClient.open();
-                Message messageToSendFromDeviceToHub =  new Message("Whatever message you would like to send");
-
-                deviceClient.sendEventAsync(messageToSendFromDeviceToHub, new IotHubEventCallbackImpl(), null);
-            }
-            catch (IOException e)
-            {
-                if (deviceClient != null)
+                
+                try
                 {
-                    deviceClient.closeNow();
+                    deviceClient = DeviceClient.createFromSecurityProvider(iotHubUri, deviceId, securityProviderX509, IotHubClientProtocol.MQTT);
+                    deviceClient.open();
+                    Message messageToSendFromDeviceToHub =  new Message("Whatever message you would like to send");
+
+                    deviceClient.sendEventAsync(messageToSendFromDeviceToHub, new IotHubEventCallbackImpl(), null);
                 }
-            }
+                catch (IOException e)
+                {
+                    if (deviceClient != null)
+                    {
+                        deviceClient.closeNow();
+                    }
+                }
+            }*/
         } 
-        catch (ProvisioningDeviceClientException | InterruptedException e) 
+        catch (ProvisioningDeviceClientException e) 
         {
             if (provisioningDeviceClient != null)
             {

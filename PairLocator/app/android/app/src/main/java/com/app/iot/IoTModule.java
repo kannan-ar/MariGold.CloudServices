@@ -56,13 +56,14 @@ public class IoTModule extends ReactContextBaseJavaModule {
     public void pingIoT(double lat, double lng, Callback cb) throws IOException, URISyntaxException, InterruptedException {
         try{
             ProvisioningService provisioningService = new ProvisioningService();
-            DeviceClient client = new DeviceClient(connString, protocol);
+            provisioningService.startProvisioning();
+
+            /*DeviceClient client = new DeviceClient(connString, protocol);
             client.open();
             TelemetryDataPoint telemetryDataPoint = new TelemetryDataPoint();
             telemetryDataPoint.lat = lat;
             telemetryDataPoint.lng = lng;
 
-            provisioningService.startProvisioning();
             
             String msgStr = telemetryDataPoint.serialize();
             Message msg = new Message(msgStr);
@@ -74,10 +75,11 @@ public class IoTModule extends ReactContextBaseJavaModule {
 
             synchronized (lockobj) {
                 lockobj.wait();
-            }
+            }*/
+            
             cb.invoke(null, "test hello");
         }catch (Exception e){
-            cb.invoke(e.toString(), null);
+            cb.invoke(e.toString(), e.toString());
         }
 
         //client.closeNow();
