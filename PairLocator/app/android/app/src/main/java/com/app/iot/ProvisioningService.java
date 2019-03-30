@@ -85,7 +85,7 @@ public class ProvisioningService
             SecurityProvider securityProviderX509 = new SecurityProviderX509Cert(leafPublicPem, leafPrivateKey, signerCertificates);
             provisioningDeviceClient = ProvisioningDeviceClient.create(globalEndpoint, idScope, PROVISIONING_DEVICE_CLIENT_TRANSPORT_PROTOCOL,
                                                                        securityProviderX509);
-            /*
+            
             provisioningDeviceClient.registerDevice(new ProvisioningDeviceClientRegistrationCallbackImpl(), provisioningStatus);
 
             while (provisioningStatus.provisioningDeviceClientRegistrationInfoClient.getProvisioningDeviceClientStatus() != ProvisioningDeviceClientStatus.PROVISIONING_DEVICE_STATUS_ASSIGNED)
@@ -121,7 +121,7 @@ public class ProvisioningService
                         deviceClient.closeNow();
                     }
                 }
-            }*/
+            }
         } 
         catch (ProvisioningDeviceClientException e) 
         {
